@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Shared code · Velaryn Code</title>
+  <link rel="icon" href="favicon.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
+  <style>
+    :root { --bg: #1f1f1f; --side: #181818; --border: #2b2b2b; --text: #cccccc; --dim: #9d9d9d; --faint: #6e7681; --accent: #2f7bff; --hover: #2a2d2e; --sel: #04395e; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text); font: 13px -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif; }
+    header { height: 44px; display: flex; align-items: center; gap: 10px; padding: 0 16px; background: var(--side); border-bottom: 1px solid var(--border); }
+    header img { width: 22px; height: 22px; border-radius: 5px; }
+    header b { font-size: 14px; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    header .meta { color: var(--faint); font-size: 12px; margin-left: auto; white-space: nowrap; }
+    header a { color: var(--dim); text-decoration: none; font-size: 12px; white-space: nowrap; }
+    header a:hover { color: var(--text); }
+    main { display: flex; height: calc(100% - 44px - 24px); }
+    nav { width: 260px; flex: none; overflow: auto; background: var(--side); border-right: 1px solid var(--border); padding: 6px 0; }
+    nav .f { display: block; width: 100%; text-align: left; border: 0; background: none; color: var(--text); font: inherit; padding: 3px 12px; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    nav .f:hover { background: var(--hover); }
+    nav .f.on { background: var(--sel); }
+    nav .d { color: var(--faint); padding: 6px 12px 2px; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    section { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    .bar { height: 34px; flex: none; display: flex; align-items: center; gap: 8px; padding: 0 14px; border-bottom: 1px solid var(--border); color: var(--dim); }
+    .bar .name { color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .bar button { margin-left: auto; background: none; border: 1px solid var(--border); color: var(--text); border-radius: 4px; padding: 3px 9px; font: inherit; font-size: 12px; cursor: pointer; }
+    .bar button + button { margin-left: 0; }
+    .bar button:hover { background: var(--hover); }
+    .view { flex: 1; overflow: auto; }
+    table.code { border-collapse: collapse; font: 13px/1.5 Menlo, Consolas, "SF Mono", monospace; width: 100%; }
+    table.code td { padding: 0 14px 0 0; vertical-align: top; white-space: pre; }
+    table.code td.n { color: var(--faint); text-align: right; padding: 0 16px 0 14px; user-select: none; width: 1%; }
+    table.code tr:first-child td { padding-top: 10px; }
+    .hljs { background: none; padding: 0; }
+    .md { max-width: 860px; margin: 0 auto; padding: 24px 32px 60px; line-height: 1.65; font-size: 14.5px; }
+    .md h1, .md h2 { border-bottom: 1px solid var(--border); padding-bottom: .3em; }
+    .md a { color: #4daafc; }
+    .md code { font-family: Menlo, Consolas, monospace; font-size: .88em; background: rgba(255,255,255,.08); padding: .15em .4em; border-radius: 4px; }
+    .md pre { background: #181818; border: 1px solid var(--border); border-radius: 6px; padding: 12px 14px; overflow: auto; }
+    .md pre code { background: none; padding: 0; }
+    .md table { border-collapse: collapse; } .md th, .md td { border: 1px solid var(--border); padding: 6px 12px; }
+    .md img { max-width: 100%; } .md blockquote { border-left: 3px solid #4a4a4a; margin-left: 0; padding: 0 1em; color: var(--dim); }
+    footer { height: 24px; background: var(--accent); color: #fff; display: flex; align-items: center; padding: 0 12px; font-size: 12px; gap: 12px; }
+    footer a { color: #fff; text-decoration: none; margin-left: auto; }
+    .msg { margin: 18vh auto; max-width: 420px; text-align: center; color: var(--dim); line-height: 1.6; padding: 0 16px; }
+    .msg b { display: block; color: var(--text); font-size: 16px; margin-bottom: 6px; }
+    @media (max-width: 700px) {
+      main { flex-direction: column; } nav { width: auto; max-height: 30vh; border-right: 0; border-bottom: 1px solid var(--border); }
+      header .meta { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header><img src="logo.png" alt=""><b id="title">Shared code</b><span class="meta" id="meta"></span><a href="./">Velaryn Code</a></header>
+  <main id="main"><div class="msg">Loading…</div></main>
+  <footer><span>Read-only</span><span id="foot"></span><a href="./">Made with Velaryn Code</a></footer>
+<script>
+'use strict';
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const fail = (title, text) => { $('#main').innerHTML = `<div class="msg"><b>${esc(title)}</b>${esc(text)}</div>`; };
+const LANG = { js: 'javascript', mjs: 'javascript', cjs: 'javascript', jsx: 'javascript', ts: 'typescript', tsx: 'typescript', py: 'python', rb: 'ruby', rs: 'rust', go: 'go', java: 'java', kt: 'kotlin', swift: 'swift', c: 'c', h: 'c', cpp: 'cpp', cc: 'cpp', hpp: 'cpp', cs: 'csharp', php: 'php', lua: 'lua', sh: 'bash', zsh: 'bash', bash: 'bash', html: 'xml', htm: 'xml', xml: 'xml', svg: 'xml', vue: 'xml', css: 'css', scss: 'scss', less: 'less', json: 'json', yml: 'yaml', yaml: 'yaml', toml: 'ini', ini: 'ini', sql: 'sql', md: 'markdown', dart: 'dart', r: 'r', pl: 'perl', dockerfile: 'dockerfile', makefile: 'makefile' };
+let bundle = null, current = null, rendered = true;
+
+function langOf(path) {
+  const name = path.split('/').pop().toLowerCase();
+  if (name === 'dockerfile' || name === 'makefile') return LANG[name];
+  return LANG[name.includes('.') ? name.split('.').pop() : ''] || null;
+}
+const isMd = (p) => /\.(md|markdown)$/i.test(p);
+
+function show(file) {
+  current = file;
+  for (const b of document.querySelectorAll('nav .f')) b.classList.toggle('on', b.dataset.path === file.path);
+  const md = isMd(file.path);
+  $('#bar').innerHTML = `<span class="name">${esc(file.path)}</span>${md ? `<button id="toggle">${rendered ? 'Show source' : 'Show preview'}</button>` : ''}<button id="copy">Copy</button><button id="dl">Download</button>`;
+  const view = $('#view');
+  if (md && rendered) {
+    view.innerHTML = `<div class="md">${DOMPurify.sanitize(marked.parse(file.content))}</div>`;
+    for (const a of view.querySelectorAll('a[href]')) { if (/^https?:/i.test(a.getAttribute('href'))) { a.target = '_blank'; a.rel = 'noopener noreferrer'; } }
+  } else {
+    const lang = langOf(file.path);
+    let html;
+    try { html = lang && hljs.getLanguage(lang) ? hljs.highlight(file.content, { language: lang, ignoreIllegals: true }).value : esc(file.content); }
+    catch { html = esc(file.content); }
+    // Split highlighted HTML into lines, keeping spans open across line breaks.
+    const lines = [];
+    let open = [];
+    for (const raw of html.split('\n')) {
+      const line = open.join('') + raw;
+      const tags = raw.match(/<span[^>]*>|<\/span>/g) || [];
+      for (const t of tags) t.startsWith('</') ? open.pop() : open.push(t);
+      lines.push(line + '</span>'.repeat(open.length));
+    }
+    view.innerHTML = `<table class="code hljs">${lines.map((l, i) => `<tr><td class="n">${i + 1}</td><td>${l || ' '}</td></tr>`).join('')}</table>`;
+  }
+  view.scrollTop = 0;
+  if (md) $('#toggle').onclick = () => { rendered = !rendered; show(file); };
+  $('#copy').onclick = () => navigator.clipboard.writeText(file.content).then(() => { $('#copy').textContent = 'Copied'; setTimeout(() => { $('#copy').textContent = 'Copy'; }, 1500); });
+  $('#dl').onclick = () => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([file.content], { type: 'text/plain' }));
+    a.download = file.path.split('/').pop();
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  };
+  history.replaceState(null, '', location.pathname + location.search + location.hash.replace(/~.*$/, '') + (bundle.files.length > 1 ? '~' + encodeURIComponent(file.path) : ''));
+}
+
+function render() {
+  document.title = `${bundle.name} · Shared with Velaryn Code`;
+  $('#title').textContent = bundle.name;
+  $('#meta').textContent = `Shared ${new Date(bundle.created).toLocaleDateString([], { dateStyle: 'medium' })}${bundle.by ? ` from ${bundle.by}` : ''}`;
+  $('#foot').textContent = `Link works until ${new Date(bundle.expires).toLocaleDateString([], { dateStyle: 'medium' })}`;
+  const files = bundle.files.slice().sort((a, b) => a.path.localeCompare(b.path));
+  let nav = '';
+  if (files.length > 1) {
+    let lastDir = '';
+    for (const f of files) {
+      const dir = f.path.includes('/') ? f.path.slice(0, f.path.lastIndexOf('/')) : '';
+      if (dir !== lastDir) { nav += `<div class="d">${esc(dir || bundle.name)}</div>`; lastDir = dir; }
+      nav += `<button class="f" data-path="${esc(f.path)}" title="${esc(f.path)}">${esc(f.path.split('/').pop())}</button>`;
+    }
+  }
+  $('#main').innerHTML = `${nav ? `<nav>${nav}</nav>` : ''}<section><div class="bar" id="bar"></div><div class="view" id="view"></div></section>`;
+  $('#main').onclick = (e) => { const b = e.target.closest('nav .f'); if (b) show(files.find((f) => f.path === b.dataset.path)); };
+  const want = decodeURIComponent((location.hash.match(/~(.*)$/) || [])[1] || '');
+  const first = files.find((f) => f.path === want) || files.find((f) => /^readme\.md$/i.test(f.path)) || files[0];
+  show(first);
+}
+
+(async () => {
+  const raw = location.hash.slice(1).replace(/~.*$/, '');
+  let url;
+  try {
+    const short = /^([a-z0-9]{10,40}):([\w-]+\.[\w-]+\.[\w-]+)$/.exec(raw);   // <project>:<signed token>
+    if (short) {
+      const claim = JSON.parse(atob(short[2].split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+      url = new URL(`https://${short[1]}.supabase.co/storage/v1/object/sign/${claim.url.split('/').map(encodeURIComponent).join('/')}?token=${short[2]}`);
+    } else url = new URL(decodeURIComponent(raw));
+  } catch { return fail('This link is incomplete', 'Copy the whole link and try again.'); }
+  // Only Velaryn cloud links (Supabase storage signed URLs) are opened.
+  if (url.protocol !== 'https:' || !/\.supabase\.co$/.test(url.hostname) || !url.pathname.startsWith('/storage/v1/object/sign/')) {
+    return fail('This isn’t a Velaryn Code link', 'Ask the person who sent it for a new link.');
+  }
+  try {
+    const r = await fetch(url.href);
+    if (!r.ok) return fail('This link has stopped working', 'It expired, or the person who shared it stopped sharing. Ask them for a new link.');
+    bundle = await r.json();
+    if (!Array.isArray(bundle.files) || !bundle.files.length) throw new Error('empty');
+  } catch { return fail('Couldn’t open this link', 'Check your connection and try again.'); }
+  render();
+})();
+</script>
+</body>
+</html>
